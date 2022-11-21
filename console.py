@@ -74,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -127,6 +127,7 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
+
         new_instance = HBNBCommand.classes[args[0]]()
         for arg in args:
             if '=' in arg:
@@ -136,16 +137,12 @@ class HBNBCommand(cmd.Cmd):
                     value = value.replace('_', ' ')
                     value = value.strip('"')
                 setattr(new_instance, key, value)
+
                 if '.' in value:
-                    try:
-                        setattr(new_instance, key, float(value))
-                    except Exception:
-                        pass
+                    setattr(new_instance, key, float(value))
                 elif value.isdigit():
-                    try:
-                        setattr(new_instance, key, int(value))
-                    except Exception:
-                        pass
+                    setattr(new_instance, key, int(value))
+
         new_instance.save()
         print(new_instance.id)
         storage.save()
@@ -343,6 +340,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
