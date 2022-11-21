@@ -136,13 +136,9 @@ class HBNBCommand(cmd.Cmd):
                 if value[0] == '"' and value[-1] == '"':
                     value = value.strip('"')
                     value = value.replace('_', ' ')
-                    value = value.replace("\\\"", "\"")
-
                 setattr(new_instance, key, value)
                 if '.' in value:
                     setattr(new_instance, key, float(value))
-                elif value.isdigit():
-                    setattr(new_instance, key, int(value))
 
         new_instance.save()
         print(new_instance.id)
