@@ -137,9 +137,15 @@ class HBNBCommand(cmd.Cmd):
                     value = value.strip('"')
                 setattr(new_instance, key, value)
                 if '.' in value:
-                    setattr(new_instance, key, float(value))
+                    try:
+                        setattr(new_instance, key, float(value))
+                    except Exception:
+                        pass
                 elif value.isdigit():
-                    setattr(new_instance, key, int(value))
+                    try:
+                        setattr(new_instance, key, int(value))
+                    except Exception:
+                        pass
         new_instance.save()
         print(new_instance.id)
         storage.save()
