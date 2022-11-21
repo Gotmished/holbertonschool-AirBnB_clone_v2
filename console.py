@@ -133,16 +133,18 @@ class HBNBCommand(cmd.Cmd):
             if '=' in arg:
                 key = arg.partition('=')[0]
                 value = arg.partition('=')[2]
-                if value[0] == '"' and value[-1] == '"':
+                if value[0] == value[-1] == '"':
                     value = value.strip('"')
                     value = value.replace('_', ' ')
+                elif '.' in value:
+                    value = float(value))
+                elif value.isdigit():
+                    value = int(value)
+            if hasattr(new_instance, key):
                 setattr(new_instance, key, value)
-                if '.' in value:
-                    setattr(new_instance, key, float(value))
 
-        new_instance.save()
         print(new_instance.id)
-        storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
