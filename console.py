@@ -128,16 +128,16 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[args[0]]()
-        if (len(args) > 1):
-            for arg in args:
-                if '=' in arg:
-                    key = arg.partition('=')[0]
-                    value = arg.partition('=')[2]
-                    if '_' in value:
-                        value = value.replace('_', ' ')
-                    setattr(new_instance, key, value)
-                    if '.' in value:
-                        setattr(new_instance, key, float(value))
+        for arg in args:
+            if '=' in arg:
+                key = arg.partition('=')[0]
+                value = arg.partition('=')[2]
+                if value[0] == '"' and value[-1] == '"':
+                    value = value.replace('_', ' ')
+                    value = value.strip('"')
+                setattr(new_instance, key, value)
+                if '.' in value:
+                    setattr(new_instance, key, float(value))
         new_instance.save()
         print(new_instance.id)
         storage.save()
