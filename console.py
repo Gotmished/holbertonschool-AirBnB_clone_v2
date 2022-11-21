@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ Console Module """
+import shlex
 import cmd
 import sys
 from models.base_model import BaseModel
@@ -113,18 +114,32 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
-        """ Create an object of any class"""
+    def do_create(self, arg):
+        """Create an object of any class
+
+        Usage: create <class name> <param 1> <param 2> <param 3>...
+        where parameter syntax is <key name>=<value>
+        """
+        args = shlex.split(arg)
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
+        new_instance = HBNBCommand.classes[args[0]]()
+        if (len(args) > 1):
+            for arg in args:
+                if '=' in arg:
+                    key = arg.partition('=')[0]
+                    value = arg.partition('=')[2]
+                    if '_' in value:
+                        value = value.replace('_', ' ')
+                    setattr(new_instance, key, value)
+                    if '.' in value:
+                        setattr(new_instance, key, float(value))
         print(new_instance.id)
-        storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
