@@ -133,11 +133,14 @@ class HBNBCommand(cmd.Cmd):
             if '=' in arg:
                 key = arg.partition('=')[0]
                 value = arg.partition('=')[2]
+                value = value.replace('_', ' ')
                 if value[0] == value[-1] == '"':
                     value = value.strip('"')
-                    value = value.replace('_', ' ')
                 elif '.' in value:
-                    value = float(value)
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        pass
                 elif value.isdigit():
                     value = int(value)
                 if hasattr(new_instance, key):
