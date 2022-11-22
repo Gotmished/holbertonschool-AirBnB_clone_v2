@@ -140,8 +140,8 @@ class HBNBCommand(cmd.Cmd):
                     value = float(value)
                 elif value.isdigit():
                     value = int(value)
-            if hasattr(new_instance, key):
-                setattr(new_instance, key, value)
+                if hasattr(new_instance, key):
+                    setattr(new_instance, key, value)
 
         print(new_instance.id)
         new_instance.save()
