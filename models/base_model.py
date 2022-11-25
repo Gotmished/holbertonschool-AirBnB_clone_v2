@@ -22,23 +22,14 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
         else:
-            if kwargs.get('created_at') is None:
-                kwargs['created_at'] = datetime.now()
-            else:
+            if 'created_at' in kwargs:
                 kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
-            if kwargs.get('updated_at') is None:
-                kwargs['updated_at'] = datetime.now()
-            else:
+            if 'updated_at' in kwargs:
                 kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
-            if kwargs.get('id') is None:
-                kwargs['id'] = str(uuid.uuid4())
-            for key, value in kwargs.items():
-                if "__class__" not in key:
-                    setattr(self, key, value)
-
-            del kwargs['__class__']
+            if '__class__' in kwargs:
+                del kwargs['__class__']
             self.__dict__.update(kwargs)
 
     def __str__(self):
@@ -60,8 +51,7 @@ class BaseModel:
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
+        dictionary.pop('_sa_instance_state', None)
         return dictionary
 
     def delete(self):
