@@ -2,7 +2,7 @@
 """This module defines a base class for all models in our hbnb clone"""
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, ForeignKey
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import models
 
@@ -21,12 +21,23 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-
         else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
+            if kwargs.get('created_at') is None:
+                kwargs['created_at'] = datetime.now()
+            else:
+                kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
+            if kwargs.get('updated_at') is None:
+                kwargs['updated_at'] = datetime.now()
+            else:
+                kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
+            if kwargs.get('id') is None:
+                kwargs['id'] = str(uuid.uuid4())
+            for key, value in kwargs.items():
+                if "__class__" not in key:
+                    setattr(self, key, value)
+
             del kwargs['__class__']
             self.__dict__.update(kwargs)
 
@@ -49,6 +60,8 @@ class BaseModel:
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
+        if '_sa_instance_state' in dictionary:
+            del dictionary['_sa_instance_state']
         return dictionary
 
     def delete(self):

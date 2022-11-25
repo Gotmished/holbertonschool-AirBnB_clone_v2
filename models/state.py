@@ -12,7 +12,6 @@ class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-
     if models.storage_type == "db":
         """ Case when db is used as storage """
         cities = relationship(
@@ -20,7 +19,6 @@ class State(BaseModel, Base):
             backref="state",
             cascade="all, delete"
         )
-
     else:
         @property
         def cities(self):

@@ -4,6 +4,7 @@
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
+import models
 
 
 class City(BaseModel, Base):
@@ -15,4 +16,4 @@ class City(BaseModel, Base):
         'Place',
         cascade='all, delete',
         backref='cities'
-    )
+        )

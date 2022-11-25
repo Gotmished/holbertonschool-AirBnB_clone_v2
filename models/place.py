@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 import models
 
+
 metadata = Base.metadata
 place_amenity = Table('place_amenity', metadata,
                       Column('place_id', String(60),
@@ -40,7 +41,8 @@ class Place(BaseModel, Base):
         amenities = relationship(
             'Amenity',
             secondary=place_amenity,
-            viewonly=False)
+            viewonly=False
+        )
     else:
         @property
         def reviews(self):
