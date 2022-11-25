@@ -12,7 +12,7 @@ from models.review import Review
 from models.state import State
 from models.user import User
 
-classes = {"Amenity": Amenity, "City": City,
+classes = {"City": City, "Amenity": Amenity,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
 
@@ -46,12 +46,13 @@ class DBStorage:
             for obj in self.__session.query(classes[cls]).all():
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 cls_dict[key] = obj
+            return cls_dict
         else:
             for key, value in classes.items():
                 for obj in self.__session.query(value).all():
                     key = "{}.{}".format(obj.__class__.__name__, obj.id)
                     cls_dict[key] = obj
-        return cls_dict
+            return cls_dict
 
     def new(self, obj):
         """Adds object to current database session"""
