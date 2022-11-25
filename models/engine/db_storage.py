@@ -12,7 +12,7 @@ from models.review import Review
 from models.state import State
 from models.user import User
 
-classes = {'City': City, "Amenity": Amenity,
+classes = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
 
@@ -42,17 +42,16 @@ class DBStorage:
     def all(self, cls=None):
         """Class-specific query on current database session"""
         cls_dict = {}
-        if cls is not None and cls in classes:
-            for object in self.__session.query(cls).all():
-                key = "{}.{}".format(object.__class__.__name__, object.id)
-                cls_dict[key] = object
+        if cls in classes:
+            for obj in self.__session.query(classes[cls]).all():
+                key = "{}.{}".format(obj.__class__.__name__, obj.id)
+                cls_dict[key] = obj
         else:
-            for c_all in classes:
-                for object in self.__session.query(c_all).all():
-                    key = "{}.{}".format(object.__class__.__name__, object.id)
-                    cls_dict[key] = object
-
-        return (cls_dict)
+            for key, value in classes.items():
+                for obj in self.__session.query(value).all():
+                    key = "{}.{}".format(obj.__class__.__name__, obj.id)
+                    cls_dict[key] = obj
+        return cls_dict
 
     def new(self, obj):
         """Adds object to current database session"""
