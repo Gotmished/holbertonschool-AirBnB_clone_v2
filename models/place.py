@@ -18,3 +18,20 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
+
+    if models.storage_type == "db":
+        reviews = relationship(
+            'Review',
+            backref='place',
+            cascade='all, delete'
+        )
+    else:
+        @property
+        def reviews(self):
+            """Case when FileStorage is used as storage method"""
+            list_reviews = []
+            all_reviews = models.storage.all(Review)
+            for each_review in all_reviews.values():
+                if each_review.place_id == self.id:
+                    list_reviews.append(each_review)
+            return list_reviews
