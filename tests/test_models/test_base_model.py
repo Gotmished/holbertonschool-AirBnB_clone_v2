@@ -9,6 +9,7 @@ import os
 import pycodestyle
 import inspect
 from models import base_model
+import models
 
 BaseModel = base_model.BaseModel
 
