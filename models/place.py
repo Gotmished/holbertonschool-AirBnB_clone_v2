@@ -6,9 +6,7 @@ from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 import models
 
-
-metadata = Base.metadata
-place_amenity = Table('place_amenity', metadata,
+place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id', String(60),
                              ForeignKey('places.id'),
                              primary_key=True, nullable=False),

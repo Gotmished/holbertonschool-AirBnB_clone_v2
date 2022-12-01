@@ -11,17 +11,16 @@ import models
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
-    name = Column(String(128), nullable=False)
-
     if getenv("HBNB_TYPE_STORAGE") == "db":
-        """ Case when db is used as storage """
+        name = Column(String(128), nullable=False)
         cities = relationship(
             "City",
             backref="state",
             cascade="all, delete"
         )
-
     else:
+        name = ""
+        
         @property
         def cities(self):
             """

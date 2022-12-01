@@ -1,36 +1,24 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
-from models.base_model import BaseModel
-from models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.review import Review
-
-classes = {
-    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-    'State': State, 'City': City, 'Amenity': Amenity,
-    'Review': Review
-}
+from os.path import exists
 
 
 class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
-    __file_path = 'file.json'
+    __file_path = "file.json"
     __objects = {}
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
-        if cls is None:
-            return self.__objects
-        else:
-            newdict = {}
-            for key, value in self.__objects.items():
-                if str(cls) in str(type(value)):
-                    newdict[key] = value
-            return newdict
+        cls_dict = {}
+        if cls is not None:
+            '''Check to see if cls exists in filestorage & add to dict.'''
+            for k, v in self.__objects.items():
+                if cls == v.__class__.__name__ or cls == v.__class__:
+                    cls_dict[k] = v
+            return cls_dict
+        return self.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -47,24 +35,37 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+
+        classes = {
+            'BaseModel': BaseModel, 'User': User, 'Place': Place,
+            'State': State, 'City': City, 'Amenity': Amenity,
+            'Review': Review
+        }
+
         try:
-            temp = {}
-            with open(self.__file_path, 'r') as f:
-                temp = json.load(f)
-                for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
-        except FileNotFoundError:
+            if exists(self.__file_path):
+                temp = {}
+                with open(self.__file_path, "r") as f:
+                    temp = json.load(f)
+                    for k in temp:
+                        self.__objects[k] = classes[temp[k]["__class__"]](**temp[k])
+        except:
             pass
 
     def delete(self, obj=None):
-        """Deletes obj from __objects if inside"""
+        '''Delete an object if it exists in Filestroage'''
         if obj is not None:
-            obj_key = obj.__class__.__name__ + '.' + obj.id
-            if obj_key in self.__objects:
-                del self.__objects[obj_key]
-        else:
-            pass
+            key = "{}:{}".format(obj.__class__.__name__, obj.id)
+            if key in self.__objects:
+                del self.__objects[key]
 
     def close(self):
-        """calls reload to restore objects from file storage"""
+        """ calls reload to restore json """
         self.reload()
