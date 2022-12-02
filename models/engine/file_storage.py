@@ -60,12 +60,12 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        '''Delete an object if it exists in Filestroage'''
+        """Deletes an object if it exists in FileStorage"""
         if obj is not None:
             key = "{}:{}".format(obj.__class__.__name__, obj.id)
             if key in self.__objects:
                 del self.__objects[key]
 
     def close(self):
-        """ calls reload to restore json """
+        """Restores objects from storage(json)"""
         self.reload()

@@ -73,3 +73,7 @@ class DBStorage:
         Base.metadata.create_all(self.__engine)
         Session.configure(bind=self.__engine, expire_on_commit=False)
         self.__session = Session()
+
+    def close(self):
+        """Closes the current session"""
+        self.__session.remove()
