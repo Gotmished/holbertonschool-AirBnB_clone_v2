@@ -33,6 +33,8 @@ def show_cities_in_state(id):
     Displays all cities of a particular state based upon
     supplied state id arg
     """
+    state_id = None
+    state_name = None
     city_list = []
     state_dict = storage.all("State")
     for each_state in state_dict.values():
@@ -44,8 +46,8 @@ def show_cities_in_state(id):
                 city_list.append(city_details)
     city_list.sort(key=lambda a: a[1])
     return render_template('9-states.html',
-                           state_name=state_name,
                            state_id=state_id,
+                           state_name=state_name,
                            city_list=city_list
                            )
 
